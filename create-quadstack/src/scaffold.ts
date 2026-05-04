@@ -11,7 +11,7 @@ import { getTemplate } from "./templates";
 import { logger } from "./utils/logger";
 import { replaceInDir } from "./utils/replace";
 
-const TEMPLATE_REPO = process.env.QUADSTACK_TEMPLATE_REPO ?? "quadstack-dev/quadstack";
+const TEMPLATE_REPO = process.env.QUADSTACK_TEMPLATE_REPO ?? "HarbdhulQuadri/quadstack";
 
 export async function scaffold(
   projectDir: string,
