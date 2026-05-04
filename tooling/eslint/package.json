@@ -1,0 +1,19 @@
+{
+  "name": "@quadstack/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./base": "./base.js",
+    "./next": "./next.js"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint-config-next": "^15.3.2",
+    "eslint-plugin-import": "^2.31.0"
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0",
+    "typescript": "^5.0.0"
+  }
+}

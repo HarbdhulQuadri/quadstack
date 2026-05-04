@@ -1,0 +1,24 @@
+{
+  "name": "@quadstack/auth",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./resend": "./src/resend.ts",
+    "./env": "./env.ts"
+  },
+  "scripts": {
+    "generate": "better-auth generate --config src/index.ts --output ../db/src/auth-schema.ts"
+  },
+  "dependencies": {
+    "better-auth": "^1.2.7",
+    "@t3-oss/env-core": "^0.12.0",
+    "resend": "^4.5.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@quadstack/db": "workspace:*",
+    "@quadstack/tsconfig": "workspace:*",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "quadstack",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "dev:web": "turbo dev --filter=@quadstack/web",
+    "dev:admin": "turbo dev --filter=@quadstack/admin",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint:fix",
+    "format": "turbo format",
+    "format:fix": "turbo format:fix",
+    "typecheck": "turbo typecheck",
+    "db:push": "pnpm --filter=@quadstack/db db:push",
+    "db:studio": "pnpm --filter=@quadstack/db db:studio",
+    "db:generate": "pnpm --filter=@quadstack/db db:generate",
+    "db:migrate": "pnpm --filter=@quadstack/db db:migrate",
+    "auth:generate": "pnpm --filter=@quadstack/auth generate",
+    "ui-add": "pnpm --filter=@quadstack/ui ui-add",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "turbo": "^2.5.3",
+    "typescript": "^5.8.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs}": ["prettier --write", "eslint --fix"],
+    "*.{json,css,md}": ["prettier --write"]
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "packageManager": "pnpm@10.19.0"
+}

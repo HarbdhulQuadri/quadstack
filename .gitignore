@@ -1,0 +1,24 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+.next
+dist
+.turbo
+out
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Drizzle
+drizzle/
+
+# Misc
+.DS_Store
+*.pem
+.vercel
+*.tsbuildinfo

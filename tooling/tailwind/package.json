@@ -1,0 +1,11 @@
+{
+  "name": "@quadstack/tailwind",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./web": "./web.ts"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.0.0"
+  }
+}

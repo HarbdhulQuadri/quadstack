@@ -1,0 +1,12 @@
+{
+  "name": "@quadstack/prettier",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "dependencies": {
+    "prettier-plugin-tailwindcss": "^0.6.11"
+  }
+}

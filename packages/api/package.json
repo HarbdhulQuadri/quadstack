@@ -1,0 +1,20 @@
+{
+  "name": "@quadstack/api",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts"
+  },
+  "dependencies": {
+    "@orpc/server": "^1.4.1",
+    "@orpc/next": "^1.4.1",
+    "@quadstack/auth": "workspace:*",
+    "@quadstack/db": "workspace:*",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@quadstack/tsconfig": "workspace:*",
+    "typescript": "^5.8.3"
+  }
+}

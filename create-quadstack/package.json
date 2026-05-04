@@ -1,0 +1,32 @@
+{
+  "name": "create-quadstack",
+  "version": "0.1.0",
+  "description": "Scaffold a new QuadStack project",
+  "keywords": ["quadstack", "turborepo", "nextjs", "orpc", "better-auth", "drizzle"],
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "create-quadstack": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10.1",
+    "fast-glob": "^3.3.3",
+    "fs-extra": "^11.3.0",
+    "picocolors": "^1.1.1",
+    "tiged": "^2.12.7"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

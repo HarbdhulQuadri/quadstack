@@ -1,0 +1,15 @@
+{
+  "name": "@quadstack/validators",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@quadstack/tsconfig": "workspace:*",
+    "typescript": "^5.8.3"
+  }
+}
