@@ -4,6 +4,10 @@ import { eq } from "drizzle-orm";
 import { user } from "@quadstack/db/schema";
 
 import { priv, pub } from "../procedures";
+import { rateLimitByIp } from "../middlewares/rate-limit";
+
+// Rate-limited public procedure for sensitive auth endpoints
+const pubRl = pub.use(rateLimitByIp);
 
 export const authRouter = {
   me: priv
@@ -23,4 +27,9 @@ export const authRouter = {
         .returning();
       return { user: updated };
     }),
+
+  // Expose a rate-limited health-check for the auth system
+  ping: pubRl
+    .route({ method: "GET", path: "/auth/ping" })
+    .handler(() => ({ ok: true })),
 };

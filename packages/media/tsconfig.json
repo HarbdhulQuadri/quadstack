@@ -1,0 +1,7 @@
+{
+  "extends": "@quadstack/tsconfig/nextjs.json",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
+  "include": ["src", "env.ts"]
+}

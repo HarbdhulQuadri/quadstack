@@ -16,6 +16,8 @@
     "@orpc/react": "^1.4.1",
     "@quadstack/api": "workspace:*",
     "@quadstack/auth": "workspace:*",
+    "@quadstack/email": "workspace:*",
+    "@quadstack/media": "workspace:*",
     "@quadstack/ui": "workspace:*",
     "@quadstack/validators": "workspace:*",
     "@t3-oss/env-nextjs": "^0.12.0",

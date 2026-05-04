@@ -1,24 +1,24 @@
 {
-  "name": "@quadstack/auth",
+  "name": "@quadstack/media",
   "version": "0.0.0",
   "private": true,
   "exports": {
     ".": "./src/index.ts",
-    "./resend": "./src/resend.ts",
+    "./client": "./src/client.tsx",
     "./env": "./env.ts"
   },
-  "scripts": {
-    "generate": "better-auth generate --config src/index.ts --output ../db/src/auth-schema.ts"
-  },
   "dependencies": {
-    "better-auth": "^1.2.7",
-    "@quadstack/email": "workspace:*",
+    "cloudinary": "^2.6.0",
     "@t3-oss/env-core": "^0.12.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@quadstack/db": "workspace:*",
     "@quadstack/tsconfig": "workspace:*",
+    "@types/react": "^19.0.0",
     "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "next": "^15.0.0"
   }
 }

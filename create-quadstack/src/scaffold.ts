@@ -159,6 +159,26 @@ async function generateEnv(dir: string, config: ProjectConfig) {
     lines.push("", "# ─── PayPal ─────────────────────────────────────────────────", "PAYPAL_CLIENT_ID=", "PAYPAL_CLIENT_SECRET=", "PAYPAL_WEBHOOK_ID=");
   }
 
+  if (config.media) {
+    lines.push(
+      "",
+      "# ─── Cloudinary ─────────────────────────────────────────────",
+      "# Sign up free at https://cloudinary.com",
+      "CLOUDINARY_CLOUD_NAME=",
+      "CLOUDINARY_API_KEY=",
+      "CLOUDINARY_API_SECRET=",
+      "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=",
+    );
+  }
+
+  lines.push(
+    "",
+    "# ─── Upstash Redis (rate limiting) ──────────────────────────",
+    "# Optional — rate limiting falls back to no-op without these",
+    "UPSTASH_REDIS_REST_URL=",
+    "UPSTASH_REDIS_REST_TOKEN=",
+  );
+
   await writeFile(path.join(dir, ".env"), lines.join("\n") + "\n", "utf-8");
 }
 

@@ -11,6 +11,7 @@ export interface ProjectConfig {
   authProviders: string[];
   payments: string[];
   database: string;
+  media: boolean;
   git: boolean;
   installDeps: boolean;
 }
@@ -104,6 +105,12 @@ export async function runPrompts(defaultName: string): Promise<ProjectConfig> {
             { value: "neon",     label: "Neon",     hint: "Serverless Postgres" },
             { value: "local",    label: "Local",    hint: "Self-hosted Postgres" },
           ],
+        }),
+
+      media: () =>
+        p.confirm({
+          message: "Include Cloudinary for image/video uploads?",
+          initialValue: true,
         }),
 
       git: () =>

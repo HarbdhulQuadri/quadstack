@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 import { db } from "@quadstack/db/client";
 import * as schema from "@quadstack/db/schema";
+import { sendPasswordResetEmail, sendWelcomeEmail } from "@quadstack/email";
 
 import { authEnv } from "../env";
 
@@ -40,9 +41,28 @@ export const auth = betterAuth({
 
   emailAndPassword: {
     enabled: true,
-    // Set to true in production once you have email sending configured.
-    // Requires RESEND_API_KEY and a verified domain.
     requireEmailVerification: false,
+    sendResetPassword: async ({ user, url }) => {
+      await sendPasswordResetEmail({ email: user.email, url });
+    },
+  },
+
+  hooks: {
+    after: [
+      {
+        matcher: (ctx) => ctx.path === "/sign-up/email",
+        handler: async (ctx) => {
+          const user = ctx.context.newSession?.user;
+          if (user) {
+            await sendWelcomeEmail({
+              email: user.email,
+              name: user.name,
+              loginUrl: `${env.NEXT_PUBLIC_WEB_URL}/login`,
+            });
+          }
+        },
+      },
+    ],
   },
 
   socialProviders: {

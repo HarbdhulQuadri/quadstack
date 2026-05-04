@@ -1,0 +1,25 @@
+{
+  "name": "@quadstack/email",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./templates/*": "./src/templates/*.tsx"
+  },
+  "scripts": {
+    "dev": "email dev --dir src/templates --port 3333"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.35",
+    "@react-email/render": "^1.0.5",
+    "resend": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@quadstack/tsconfig": "workspace:*",
+    "@types/react": "^19.0.0",
+    "react-email": "^3.0.7",
+    "typescript": "^5.8.3"
+  }
+}
