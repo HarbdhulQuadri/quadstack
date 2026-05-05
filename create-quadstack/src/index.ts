@@ -3,6 +3,7 @@ import * as p from "@clack/prompts";
 import path from "path";
 import pc from "picocolors";
 
+import { addApp } from "./commands/add-app";
 import { addMobile } from "./commands/add-mobile";
 import { runPrompts } from "./prompts";
 import { scaffold } from "./scaffold";
@@ -19,7 +20,11 @@ async function main() {
       await addMobile(process.cwd());
       return;
     }
-    logger.error(`Unknown "add" target: "${what}". Available: mobile`);
+    if (what === "app") {
+      await addApp(process.cwd(), rest[1]);
+      return;
+    }
+    logger.error(`Unknown "add" target: "${what}". Available: app, mobile`);
     process.exit(1);
   }
 
