@@ -161,8 +161,8 @@ function generateAppFiles(
 
   if (isNextjs) {
     deps[`@${scope}/ui`]        = "workspace:*";
-    deps["@orpc/client"]        = "^1.4.1";
-    deps["@orpc/react"]         = "^1.4.1";
+    deps["@orpc/client"]        = "^1.14.1";
+    deps["@orpc/react"]         = "^1.14.1";
     deps["@tanstack/react-query"] = "^5.75.0";
     deps["better-auth"]         = "^1.2.7";
   }
@@ -291,14 +291,25 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 `;
 
     files[`${dir}/src/app/api/rpc/[...rest]/route.ts`] =
-`import { createNextHandler } from "@orpc/next";
+`import { RPCHandler } from "@orpc/next";
 
 import { appRouter } from "@${scope}/api";
-import { createContext } from "@${scope}/api/context";
 
-const handler = createNextHandler({ router: appRouter, createContext });
+const handler = new RPCHandler(appRouter);
 
-export { handler as GET, handler as POST, handler as PUT, handler as PATCH, handler as DELETE };
+async function handleRequest(req: Request) {
+  const { response } = await handler.handle(req, {
+    prefix: "/api/rpc",
+    context: { headers: req.headers },
+  });
+  return response;
+}
+
+export const GET = handleRequest;
+export const POST = handleRequest;
+export const PUT = handleRequest;
+export const PATCH = handleRequest;
+export const DELETE = handleRequest;
 `;
 
     files[`${dir}/src/middleware.ts`] =
@@ -319,14 +330,25 @@ export const config = {
   // ── API-only: just the route handler ──────────────────────────────────────
   if (isApiOnly) {
     files[`${dir}/src/app/api/rpc/[...rest]/route.ts`] =
-`import { createNextHandler } from "@orpc/next";
+`import { RPCHandler } from "@orpc/next";
 
 import { appRouter } from "@${scope}/api";
-import { createContext } from "@${scope}/api/context";
 
-const handler = createNextHandler({ router: appRouter, createContext });
+const handler = new RPCHandler(appRouter);
 
-export { handler as GET, handler as POST, handler as PUT, handler as PATCH, handler as DELETE };
+async function handleRequest(req: Request) {
+  const { response } = await handler.handle(req, {
+    prefix: "/api/rpc",
+    context: { headers: req.headers },
+  });
+  return response;
+}
+
+export const GET = handleRequest;
+export const POST = handleRequest;
+export const PUT = handleRequest;
+export const PATCH = handleRequest;
+export const DELETE = handleRequest;
 `;
 
     files[`${dir}/src/app/page.tsx`] =

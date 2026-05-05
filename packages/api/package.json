@@ -8,14 +8,14 @@
     "./openapi": "./src/lib/openapi.ts"
   },
   "dependencies": {
-    "@orpc/server": "^1.4.1",
-    "@orpc/next": "^1.4.1",
-    "@orpc/openapi": "^1.4.1",
-    "@orpc/zod": "^1.4.1",
+    "@orpc/server": "^1.14.1",
+    "@orpc/next": "^0.27.0",
+    "@orpc/openapi": "^1.14.1",
+    "@orpc/zod": "^1.14.1",
     "@quadstack/auth": "workspace:*",
     "@quadstack/db": "workspace:*",
-    "@upstash/ratelimit": "^2.0.5",
-    "@upstash/redis": "^1.34.8",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.37.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

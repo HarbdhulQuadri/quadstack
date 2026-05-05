@@ -100,8 +100,8 @@ function generateExpoFiles(
       dependencies: {
         [`@${scope}/api`]:        "workspace:*",
         [`@${scope}/validators`]: "workspace:*",
-        "@orpc/client":           "^1.4.1",
-        "@orpc/react":            "^1.4.1",
+        "@orpc/client":           "^1.14.1",
+        "@orpc/react":            "^1.14.1",
         "@tanstack/react-query":  "^5.75.0",
         "better-auth":            "^1.2.7",
         "expo":                   "~54.0.0",

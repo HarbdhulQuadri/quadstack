@@ -21,8 +21,8 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.2.17",
-    "@faker-js/faker": "^9.7.0",
+    "@electric-sql/pglite": "^0.4.5",
+    "@faker-js/faker": "^10.4.0",
     "@quadstack/tsconfig": "workspace:*",
     "drizzle-orm": "^0.41.0",
     "drizzle-kit": "^0.30.0",

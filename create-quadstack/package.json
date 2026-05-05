@@ -1,32 +1,56 @@
 {
   "name": "create-quadstack",
   "version": "0.1.0",
-  "description": "Scaffold a new QuadStack project",
-  "keywords": ["quadstack", "turborepo", "nextjs", "orpc", "better-auth", "drizzle"],
+  "description": "Scaffold a production-ready full-stack TypeScript monorepo — web, admin, mobile, and API from one command",
+  "keywords": [
+    "create-quadstack",
+    "quadstack",
+    "turborepo",
+    "monorepo",
+    "nextjs",
+    "expo",
+    "react-native",
+    "orpc",
+    "better-auth",
+    "drizzle",
+    "scaffold",
+    "starter",
+    "template",
+    "fullstack",
+    "typescript"
+  ],
+  "author": "HarbdhulQuadri",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HarbdhulQuadri/quadstack.git"
+  },
+  "homepage": "https://github.com/HarbdhulQuadri/quadstack#readme",
+  "bugs": {
+    "url": "https://github.com/HarbdhulQuadri/quadstack/issues"
+  },
   "type": "module",
   "bin": {
     "create-quadstack": "./dist/index.js"
   },
   "files": ["dist"],
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "prepublishOnly": "pnpm build"
   },
-  "dependencies": {
+  "devDependencies": {
     "@clack/prompts": "^0.10.1",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.0.0",
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.0",
     "picocolors": "^1.1.1",
-    "tiged": "^2.12.7"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.0.0",
+    "tiged": "^2.12.7",
+    "tsup": "^8.4.0",
     "typescript": "^5.8.3"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=18"
   }
 }
