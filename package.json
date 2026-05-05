@@ -19,6 +19,8 @@
     "test": "turbo test",
     "auth:generate": "pnpm --filter=@quadstack/auth generate",
     "ui-add": "pnpm --filter=@quadstack/ui ui-add",
+    "deploy:web": "vercel deploy --prod --cwd apps/web",
+    "deploy:admin": "vercel deploy --prod --cwd apps/admin",
     "prepare": "husky"
   },
   "devDependencies": {

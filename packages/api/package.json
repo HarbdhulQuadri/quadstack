@@ -4,11 +4,14 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
-    "./client": "./src/client.ts"
+    "./client": "./src/client.ts",
+    "./openapi": "./src/lib/openapi.ts"
   },
   "dependencies": {
     "@orpc/server": "^1.4.1",
     "@orpc/next": "^1.4.1",
+    "@orpc/openapi": "^1.4.1",
+    "@orpc/zod": "^1.4.1",
     "@quadstack/auth": "workspace:*",
     "@quadstack/db": "workspace:*",
     "@upstash/ratelimit": "^2.0.5",

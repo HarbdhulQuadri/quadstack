@@ -78,6 +78,13 @@ export async function scaffold(
   await generateEnv(projectDir, config);
   logger.success(".env created");
 
+  // ─── Platform deploy config ───────────────────────────────────────────────
+  if (config.platform !== "none") {
+    logger.step(`Generating ${config.platform} deploy config...`);
+    await generateDeployConfig(projectDir, config);
+    logger.success("Deploy config created");
+  }
+
   // ─── Update README ────────────────────────────────────────────────────────
   await writeFile(
     path.join(projectDir, "README.md"),
@@ -180,6 +187,86 @@ async function generateEnv(dir: string, config: ProjectConfig) {
   );
 
   await writeFile(path.join(dir, ".env"), lines.join("\n") + "\n", "utf-8");
+}
+
+async function generateDeployConfig(dir: string, config: ProjectConfig): Promise<void> {
+  const apps = config.apps;
+
+  if (config.platform === "vercel") {
+    // One vercel.json per app
+    for (const app of apps) {
+      await writeFile(
+        path.join(dir, "apps", app, "vercel.json"),
+        JSON.stringify({
+          framework: "nextjs",
+          installCommand: "cd ../.. && pnpm install --frozen-lockfile",
+          buildCommand:   `cd ../.. && pnpm build --filter=@${config.packageScope}/${app}...`,
+          outputDirectory: ".next",
+        }, null, 2) + "\n",
+        "utf-8",
+      );
+    }
+
+    // CD workflow
+    const deployJobs = apps.map((app) => `
+  deploy-${app}:
+    name: Deploy ${app} → Vercel
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec vercel deploy --prod --token=\${{ secrets.VERCEL_TOKEN }} --cwd apps/${app}
+        env:
+          VERCEL_ORG_ID: \${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: \${{ secrets.VERCEL_${app.toUpperCase()}_PROJECT_ID }}`).join("\n");
+
+    await writeFile(
+      path.join(dir, ".github", "workflows", "deploy.yml"),
+      `name: Deploy\n\non:\n  push:\n    branches: [main]\n\njobs:${deployJobs}\n`,
+      "utf-8",
+    );
+  }
+
+  if (config.platform === "railway") {
+    await writeFile(
+      path.join(dir, "railway.toml"),
+      `[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "pnpm start:web"
+restartPolicyType = "on_failure"
+`,
+      "utf-8",
+    );
+  }
+
+  if (config.platform === "flyio") {
+    for (const app of apps) {
+      const port = app === "admin" ? 3001 : 3000;
+      await writeFile(
+        path.join(dir, "apps", app, "fly.toml"),
+        `app = "${config.packageScope}-${app}"
+primary_region = "iad"
+
+[build]
+
+[http_service]
+  internal_port = ${port}
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+`,
+        "utf-8",
+      );
+    }
+  }
 }
 
 function generateReadme(config: ProjectConfig, templateName: string): string {

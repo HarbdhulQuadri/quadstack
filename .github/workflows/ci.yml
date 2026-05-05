@@ -6,14 +6,20 @@ on:
   pull_request:
     branches: [main, development]
 
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
 jobs:
-  check:
-    name: Lint, Format & Typecheck
+  ci:
+    name: Lint · Typecheck · Test · Build
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -29,11 +35,32 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Format check
+        run: pnpm format
+
       - name: Lint
         run: pnpm lint
 
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Format check
-        run: pnpm format
+      - name: Test
+        run: pnpm test
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
+
+      - name: Build
+        run: pnpm build
+        env:
+          # Stub required env vars so Next.js build doesn't fail in CI
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
+          BETTER_AUTH_SECRET: ci-secret-not-real
+          BETTER_AUTH_URL: http://localhost:3000
+          NEXT_PUBLIC_WEB_URL: http://localhost:3000
+          NEXT_PUBLIC_ADMIN_URL: http://localhost:3001
+          RESEND_API_KEY: re_ci_placeholder
+          EMAIL_FROM: noreply@example.com
+          CLOUDINARY_CLOUD_NAME: placeholder
+          CLOUDINARY_API_KEY: placeholder
+          CLOUDINARY_API_SECRET: placeholder
+          NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: placeholder

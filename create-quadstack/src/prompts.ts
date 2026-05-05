@@ -12,6 +12,7 @@ export interface ProjectConfig {
   payments: string[];
   database: string;
   media: boolean;
+  platform: string;
   git: boolean;
   installDeps: boolean;
 }
@@ -111,6 +112,18 @@ export async function runPrompts(defaultName: string): Promise<ProjectConfig> {
         p.confirm({
           message: "Include Cloudinary for image/video uploads?",
           initialValue: true,
+        }),
+
+      platform: () =>
+        p.select({
+          message: "Deployment platform",
+          options: [
+            { value: "vercel",   label: "Vercel",   hint: "Recommended — zero config for Next.js" },
+            { value: "railway",  label: "Railway",  hint: "Full-stack: app + database in one place" },
+            { value: "flyio",    label: "Fly.io",   hint: "Container-based, global edge" },
+            { value: "none",     label: "None",     hint: "I'll configure deployment myself" },
+          ],
+          initialValue: "vercel",
         }),
 
       git: () =>
