@@ -1,18 +1,21 @@
 # QuadStack
 
-A production-ready Turborepo monorepo template. Full-stack TypeScript with
-Next.js, ORPC, Better Auth, Drizzle ORM, and Tailwind CSS v4.
+A production-ready Turborepo monorepo template. Full-stack TypeScript — web, admin, and mobile from one codebase, one set of types, one deployment command.
 
 ## Quick Start
 
 ```bash
-# Recommended — interactive CLI
 npx create-quadstack@latest my-project
+```
 
-# Or clone manually
-git clone https://github.com/your-org/quadstack my-project
+The CLI walks you through app type, auth providers, payments, media uploads, and deployment platform — then generates a working project tailored to your choices.
+
+Or clone manually:
+
+```bash
+git clone https://github.com/HarbdhulQuadri/quadstack my-project
 cd my-project
-cp .env.example .env   # fill in your keys
+cp .env.example .env
 pnpm install
 pnpm db:push
 pnpm dev
@@ -23,25 +26,32 @@ pnpm dev
 | Layer | Technology |
 |---|---|
 | Apps | Next.js 15, React 19 |
-| API | ORPC (type-safe, HTTP-native routes) |
-| Auth | Better Auth (swappable — see docs) |
+| Mobile | Expo SDK 54, Expo Router, NativeWind v4 |
+| API | ORPC (type-safe HTTP-native routes + OpenAPI spec) |
+| Auth | Better Auth (email/password + OAuth, swappable) |
 | Database | Drizzle ORM + PostgreSQL |
 | UI | shadcn/ui + Tailwind CSS v4 |
-| Email | Resend |
+| Email | React Email templates + Resend |
+| Media | Cloudinary (signed server-side uploads, no bytes through your server) |
 | Validation | Zod |
+| Rate limiting | Upstash Redis (falls back to no-op without config) |
+| Testing | Vitest + PGlite (in-memory Postgres, no Docker) |
 | Monorepo | Turborepo + pnpm workspaces |
 
 ## Directory Overview
 
 ```
 apps/
-  web/          Public-facing Next.js app    → localhost:3000
-  admin/        Internal admin dashboard     → localhost:3001
+  web/          Public-facing Next.js app          → localhost:3000
+  admin/        Internal admin dashboard            → localhost:3001
+  expo/         React Native mobile app (optional)
 
 packages/
-  api/          All ORPC routers + middlewares (the backend)
-  auth/         Better Auth config + Resend email client
-  db/           Drizzle schema + Postgres client
+  api/          ORPC routers, middlewares, OpenAPI spec
+  auth/         Better Auth config + email hooks
+  db/           Drizzle schema, client, seed, PGlite test helper
+  email/        React Email templates + Resend send helper
+  media/        Cloudinary server utils + CloudImage/CloudVideo components
   ui/           Shared shadcn/ui components
   validators/   Shared Zod schemas
 
@@ -51,32 +61,36 @@ tooling/
   tailwind/     Tailwind preset
   typescript/   tsconfig bases
 
-create-quadstack/   CLI (published to npm separately)
-
-docs/
-  architecture.md               How the system is structured
-  getting-started.md            Local setup from scratch
-  contributing/
-    frontend.md                 Adding pages, components, forms
-    backend.md                  Adding routers, middleware, DB tables
-    database.md                 Schema, migrations, Drizzle queries
-  decisions/
-    001-why-orpc.md
-    002-why-better-auth.md
-    003-switching-auth.md       How to swap to Clerk / NextAuth / Supabase
+create-quadstack/   CLI (published to npm)
+docs/               Architecture, guides, decisions
 ```
 
-## Common Commands
+## CLI Commands
+
+```bash
+# Scaffold a new project
+npx create-quadstack my-project
+
+# Add a mobile app to an existing project
+npx create-quadstack add mobile
+
+# Add any new Next.js / API-only / docs app
+npx create-quadstack add app <name>
+```
+
+## Development Commands
 
 ```bash
 pnpm dev             # Start all apps
-pnpm dev:web         # Start web only
-pnpm dev:admin       # Start admin only
+pnpm dev:web         # Web only  (localhost:3000)
+pnpm dev:admin       # Admin only (localhost:3001)
 
 pnpm db:push         # Sync schema to database (dev)
-pnpm db:studio       # Open Drizzle Studio
-pnpm db:generate     # Generate migration SQL (prod)
 pnpm db:migrate      # Apply migrations (prod)
+pnpm db:studio       # Open Drizzle Studio
+pnpm db:seed         # Seed database with faker data
+
+pnpm test            # Run all tests (PGlite, no Docker needed)
 
 pnpm auth:generate   # Regenerate auth DB schema after auth config changes
 
@@ -84,42 +98,54 @@ pnpm lint            # ESLint
 pnpm typecheck       # TypeScript
 pnpm format:fix      # Prettier
 
-pnpm ui-add          # Add a shadcn/ui component to packages/ui
+pnpm ui-add          # Add a shadcn/ui component
+
+pnpm deploy:web      # Deploy web app → Vercel (prod)
+pnpm deploy:admin    # Deploy admin app → Vercel (prod)
 ```
+
+## API Docs
+
+When the dev server is running:
+
+- **`/api/docs`** — Swagger UI (browse and test all endpoints)
+- **`/api/docs/openapi.json`** — OpenAPI 3.1 spec (import into Postman, Insomnia, or run `openapi-typescript` for type generation)
+
+The spec is auto-generated from ORPC router definitions — no manual annotation needed.
 
 ## Backend Architecture
 
-There is no separate backend server. The API lives inside each Next.js app as
-Route Handlers, but the business logic is shared via `packages/api`.
+No separate backend server. Business logic lives in `packages/api` and mounts into each Next.js app as a single Route Handler:
 
 ```
-Browser request
-  → apps/web/src/app/api/rpc/[...rest]/route.ts   (one-liner, never changes)
-      → packages/api/src/orpc-routers/             (your feature logic)
-          → packages/db/                            (Drizzle queries)
+Browser / Mobile
+  → /api/rpc/[...rest]          (one-liner route, never changes)
+      → packages/api/orpc-routers/  (your feature logic)
+          → packages/db/            (Drizzle queries)
               → PostgreSQL
 ```
 
-The `orpc` client in each app is a typed proxy. Zero codegen. Types flow
-end-to-end automatically from the router definition to the React component.
+The ORPC client in each app is a typed proxy — zero codegen, types flow end-to-end.
 
 ## Switching Auth
 
-The auth contract is a single file: `packages/auth/src/index.ts`.
-It exports `auth`, `getSession`, `Session`, and `User`.
-Replace that file to swap providers.
+The auth contract is four exports in one file (`packages/auth/src/index.ts`):
+`auth`, `getSession`, `Session`, `User`. Replace that file to swap providers.
 
-See `docs/decisions/003-switching-auth.md` for step-by-step guides:
-- → Clerk
-- → NextAuth / Auth.js v5
-- → Supabase Auth
-- → Lucia Auth
+See `docs/decisions/003-switching-auth.md` for step-by-step guides to Clerk, NextAuth v5, Supabase Auth, and Lucia.
 
 ## Deploying
 
+The CLI generates all deployment config during scaffold. For manual setup:
+
 | App | Host | Why |
 |---|---|---|
-| `apps/web` | Vercel | Edge CDN, ISR, zero-config |
-| `apps/admin` | Railway | Fixed cost, always-on |
-| Database | Supabase | Managed Postgres + backups |
-| Email | Resend | Transactional email |
+| `apps/web` | Vercel | Edge CDN, ISR, zero-config monorepo |
+| `apps/admin` | Vercel / Railway | Fixed cost, always-on |
+| Database | Supabase / Neon | Managed Postgres + backups |
+| Email | Resend | Deliverability + React Email rendering |
+| Media | Cloudinary | CDN + transforms, free tier covers most projects |
+| Rate limiting | Upstash | Serverless Redis, no persistent connection needed |
+
+CI runs on every push/PR (lint → typecheck → test → build).  
+CD deploys to Vercel on every push to `main`.
