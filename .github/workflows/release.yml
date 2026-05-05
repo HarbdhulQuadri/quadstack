@@ -1,0 +1,35 @@
+name: Release CLI
+
+on:
+  push:
+    tags:
+      - "cli-v*"   # trigger with: git tag cli-v0.2.0 && git push --tags
+
+jobs:
+  release:
+    name: Build & Publish create-quadstack
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Install CLI deps
+        run: npm install
+        working-directory: create-quadstack
+
+      - name: Build
+        run: npm run build
+        working-directory: create-quadstack
+
+      - name: Publish
+        run: npm publish --access public
+        working-directory: create-quadstack
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
