@@ -1,4 +1,5 @@
-import { RPCHandler } from "@orpc/next";
+import { RPCHandler } from "@orpc/server/fetch";
+
 import { appRouter } from "@quadstack/api";
 
 const handler = new RPCHandler(appRouter);
@@ -11,8 +12,8 @@ async function handleRequest(req: Request) {
   return response;
 }
 
-export const GET = handleRequest;
-export const POST = handleRequest;
-export const PUT = handleRequest;
-export const PATCH = handleRequest;
+export const GET    = handleRequest;
+export const POST   = handleRequest;
+export const PUT    = handleRequest;
+export const PATCH  = handleRequest;
 export const DELETE = handleRequest;

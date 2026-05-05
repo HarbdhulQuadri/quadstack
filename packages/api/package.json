@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@orpc/server": "^1.14.1",
-    "@orpc/next": "^0.27.0",
     "@orpc/openapi": "^1.14.1",
     "@orpc/zod": "^1.14.1",
     "@quadstack/auth": "workspace:*",

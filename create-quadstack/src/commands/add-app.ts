@@ -291,7 +291,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 `;
 
     files[`${dir}/src/app/api/rpc/[...rest]/route.ts`] =
-`import { RPCHandler } from "@orpc/next";
+`import { RPCHandler } from "@orpc/server/fetch";
 
 import { appRouter } from "@${scope}/api";
 
@@ -330,7 +330,7 @@ export const config = {
   // ── API-only: just the route handler ──────────────────────────────────────
   if (isApiOnly) {
     files[`${dir}/src/app/api/rpc/[...rest]/route.ts`] =
-`import { RPCHandler } from "@orpc/next";
+`import { RPCHandler } from "@orpc/server/fetch";
 
 import { appRouter } from "@${scope}/api";
 

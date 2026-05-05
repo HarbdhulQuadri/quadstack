@@ -1,6 +1,6 @@
 {
   "name": "create-quadstack",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Scaffold a production-ready full-stack TypeScript monorepo — web, admin, mobile, and API from one command",
   "keywords": [
     "create-quadstack",
@@ -33,11 +33,13 @@
   "bin": {
     "create-quadstack": "./dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "tsup"
   },
   "devDependencies": {
     "@clack/prompts": "^0.10.1",
