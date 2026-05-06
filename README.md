@@ -65,6 +65,24 @@ create-quadstack/   CLI (published to npm)
 docs/               Architecture, guides, decisions
 ```
 
+## App Templates
+
+When you scaffold a project the CLI generates a complete, working domain schema, validators, ORPC routers, and UI pages — not just a skeleton.
+
+| Template | What you get |
+|---|---|
+| **Blank** | Base monorepo only |
+| **SaaS** | Orgs, members, token invites, Stripe subscription lifecycle, billing portal |
+| **E-commerce** | 14-table schema, cart, orders, promo codes, SSE order tracker, Stripe + Paystack |
+| **LMS** | Courses, sections, lessons, enrollment gated behind payment, progress tracking |
+| **Blog / CMS** | Posts, categories, tags, comments, author ownership, admin moderation |
+| **Marketplace** | Seller profiles, listings with ratings, bookings, payment-gated confirm, payout queue |
+
+Every template includes:
+- `pub` / `priv` / `adminPriv` procedure builders with `staff_role` table
+- `server-orpc.ts` — direct in-process caller for server components (zero HTTP round-trip)
+- Cached wrappers via `unstable_cache` for public data
+
 ## CLI Commands
 
 ```bash

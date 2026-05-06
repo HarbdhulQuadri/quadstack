@@ -56,11 +56,30 @@ quadstack/
 
 ## How a Request Flows
 
-### Web / Admin
+### Server Components (fastest path)
+
+```
+Next.js Server Component / Page
+  │  import { getServerCaller } from "@/lib/server-orpc"
+  │  const caller = await getServerCaller()
+  ▼
+createRouterClient(appRouter, { context: { headers, db } })
+  │  In-process call — no HTTP, no serialisation
+  ▼
+procedure handler  (packages/api/src/orpc-routers/*.ts)
+  │
+  │  Drizzle ORM query
+  ▼
+PostgreSQL  (Supabase / Neon / local)
+```
+
+Public data also passes through `unstable_cache` for a 5-minute TTL before hitting the DB.
+
+### Client Components (browser fetch)
 
 ```
 Browser
-  │  HTTP request
+  │  orpc.products.list()  ← typed client proxy
   ▼
 Next.js Route Handler
   apps/web/src/app/api/rpc/[...rest]/route.ts   ← one-liner, never changes
@@ -73,6 +92,7 @@ appRouter   (packages/api/src/orpc-routers/index.ts)
   │    pub  → injects `db` (Drizzle client) into context
   │    priv → reads Better Auth session, injects `user` + `session`
   │           throws UNAUTHORIZED if not logged in
+  │    adminPriv → checks staff_role table, throws FORBIDDEN if not staff
   ▼
 procedure handler  (packages/api/src/orpc-routers/*.ts)
   │
@@ -137,10 +157,17 @@ packages/media      (no internal deps)
 
 ### Procedure builders
 
+Every app-type template generates `packages/api/src/procedures.ts` with three builders:
+
 ```ts
-// packages/api/src/procedures.ts
-pub   // any request — adds `db` to context
-priv  // authenticated request — adds `db`, `user`, `session`
+pub       // any request — adds `db` to context
+priv      // authenticated — adds `db`, `user`, `session`
+adminPriv // staff/admin only — checks `staff_role` table, throws FORBIDDEN otherwise
+```
+
+Grant admin access in the database:
+```sql
+INSERT INTO staff_role (user_id) VALUES ('<user-id>');
 ```
 
 Apply rate limiting by composing:
@@ -154,6 +181,22 @@ const pubRl = pub.use(rateLimitByIp);
 |---|---|
 | `pub` | `db`, `headers` |
 | `priv` | `db`, `headers`, `user`, `session` |
+| `adminPriv` | `db`, `headers`, `user`, `session`, `staffRole` |
+
+### Server-side direct caller
+
+Each generated template includes `apps/web/src/lib/server-orpc.ts` and `apps/admin/src/lib/server-orpc.ts`:
+
+```ts
+import "server-only";
+import { getServerCaller } from "@/lib/server-orpc";
+
+// In a server component or page — zero HTTP round-trip, direct DB access
+const caller = await getServerCaller();
+const products = await caller.products.list();
+```
+
+Public data is wrapped with `unstable_cache` (5-minute TTL + cache tags) so server component renders are fast without redundant DB queries.
 
 ### File naming
 
