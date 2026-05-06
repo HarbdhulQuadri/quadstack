@@ -66,7 +66,7 @@ export async function scaffold(
   if (template.id !== "blank") {
     logger.step(`Applying ${template.name} template...`);
 
-    const files = template.generate(config.packageScope);
+    const files = template.generate(config.packageScope, config);
     await writeGeneratedFiles(projectDir, files);
 
     logger.success(`${template.name} schema, validators and routers generated`);
