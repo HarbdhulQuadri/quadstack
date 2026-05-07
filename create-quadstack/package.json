@@ -1,6 +1,6 @@
 {
   "name": "create-quadstack",
-  "version": "0.1.1",
+  "version": "0.3.0",
   "description": "Scaffold a production-ready full-stack TypeScript monorepo — web, admin, mobile, and API from one command",
   "keywords": [
     "create-quadstack",
@@ -23,7 +23,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/HarbdhulQuadri/quadstack.git"
+    "url": "git+https://github.com/HarbdhulQuadri/quadstack.git"
   },
   "homepage": "https://github.com/HarbdhulQuadri/quadstack#readme",
   "bugs": {
@@ -31,7 +31,7 @@
   },
   "type": "module",
   "bin": {
-    "create-quadstack": "./dist/index.js"
+    "create-quadstack": "dist/index.js"
   },
   "files": [
     "dist"
@@ -41,14 +41,16 @@
     "dev": "tsup --watch",
     "prepublishOnly": "tsup"
   },
-  "devDependencies": {
+  "dependencies": {
     "@clack/prompts": "^0.10.1",
-    "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.0.0",
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.0",
     "picocolors": "^1.1.1",
-    "tiged": "^2.12.7",
+    "tiged": "^2.12.7"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.0.0",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3"
   },

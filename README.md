@@ -77,6 +77,11 @@ When you scaffold a project the CLI generates a complete, working domain schema,
 | **LMS** | Courses, sections, lessons, enrollment gated behind payment, progress tracking |
 | **Blog / CMS** | Posts, categories, tags, comments, author ownership, admin moderation |
 | **Marketplace** | Seller profiles, listings with ratings, bookings, payment-gated confirm, payout queue |
+| **Booking** | Provider services, weekly availability windows, slot engine, appointment lifecycle |
+| **Job Board** | Company profiles, job listings, applications, employer review workflow, saved jobs |
+| **Community** | Channels, threaded discussions, nested replies, vote toggle, soft-delete, moderation |
+| **Events** | Events, ticket tiers, capacity tracking, QR check-in codes, Stripe + Paystack |
+| **Invoicing** | Clients, invoices with line items, Stripe payment links, payment history |
 
 Every template includes:
 - `pub` / `priv` / `adminPriv` procedure builders with `staff_role` table
